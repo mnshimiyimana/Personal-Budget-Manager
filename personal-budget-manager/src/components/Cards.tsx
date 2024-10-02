@@ -6,6 +6,7 @@ import CurrencySelector from "./CurrencySelector";
 import MonthlyVariationChart from "./MonthlyVariationChart";
 import { fetchEntries } from "../store/entriesSlice";
 import { useAppDispatch } from "../hooks/useAppDispatch";
+import { Spin } from "antd";
 
 interface CardProps {
   title: string;
@@ -75,7 +76,9 @@ const Cards: React.FC = () => {
         </div>
 
         {loading ? (
-          <div>Loading...</div>
+          <div>
+            <Spin />
+          </div>
         ) : (
           <div className="flex space-x-4">
             <div className="bg-white shadow-md rounded-lg p-4 m-2 flex flex-col w-80 h-36">

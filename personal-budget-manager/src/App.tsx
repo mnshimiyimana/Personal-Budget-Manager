@@ -9,7 +9,7 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import WelcomeMessage from "./components/Headers";
 import BudgetPlanner from "./pages/BudgetPlanner";
 import Alerts from "./pages/Alerts";
@@ -23,6 +23,20 @@ const App: React.FC = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const selectedKey = () => {
+    switch (location.pathname) {
+      case "/":
+        return "1"; // Dashboard
+      case "/budget-planner":
+        return "2"; // Budget Planner
+      case "/alerts":
+        return "3"; // Alerts
+      default:
+        return "1"; // Default to Dashboard if no match
+    }
+  };
 
   return (
     <Layout className="font-sans min-h-screen">
@@ -33,11 +47,13 @@ const App: React.FC = () => {
         style={{ position: "sticky", top: 0, height: "100vh", zIndex: 100 }}
       >
         <div className="demo-logo-vertical font-bold" />
-        <h1 className="text-white font-extrabold text-xl text-center py-4 hidden md:block ">Budgman</h1>
+        <h1 className="text-white font-extrabold text-xl text-center py-4 hidden md:block ">
+          Budgman
+        </h1>
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          selectedKeys={[selectedKey()]}
           items={[
             {
               key: "1",

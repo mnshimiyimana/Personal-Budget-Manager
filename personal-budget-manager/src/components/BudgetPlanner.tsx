@@ -3,7 +3,12 @@ import { Button, Table, Spin, Alert, Modal, Select } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import EntryModal from "../components/EntryModal";
 import { useSelector } from "react-redux";
-import { fetchEntries, createEntry, updateEntry, removeEntry } from "../store/entriesSlice";
+import {
+  fetchEntries,
+  createEntry,
+  updateEntry,
+  removeEntry,
+} from "../store/entriesSlice";
 import { RootState } from "../store/store";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import moment from "moment";
@@ -19,8 +24,6 @@ const BudgetPlanner: React.FC = () => {
   const [isIncome, setIsIncome] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [selectedEntry, setSelectedEntry] = useState<any | null>(null);
-
-  
   const [monthFilter, setMonthFilter] = useState<any | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
 
@@ -29,9 +32,11 @@ const BudgetPlanner: React.FC = () => {
   }, [dispatch]);
 
   const filteredData = (data: any[]) => {
-    return data.filter(entry => {
-      const isMonthMatch = !monthFilter || moment(entry.date).isSame(monthFilter, 'month');
-      const isCategoryMatch = !categoryFilter || entry.category === categoryFilter;
+    return data.filter((entry) => {
+      const isMonthMatch =
+        !monthFilter || moment(entry.date).isSame(monthFilter, "month");
+      const isCategoryMatch =
+        !categoryFilter || entry.category === categoryFilter;
       return isMonthMatch && isCategoryMatch;
     });
   };
@@ -41,8 +46,9 @@ const BudgetPlanner: React.FC = () => {
     setCategoryFilter(null);
   };
 
-
-  const categories = Array.from(new Set(expenseData.map(entry => entry.category)));
+  const categories = Array.from(
+    new Set(expenseData.map((entry) => entry.category))
+  );
 
   const columns = [
     { title: "Category", dataIndex: "category", key: "category" },
@@ -60,7 +66,10 @@ const BudgetPlanner: React.FC = () => {
       key: "action",
       render: (_: any, record: any) => (
         <>
-          <EditOutlined onClick={() => handleEdit(record)} style={{ marginRight: 8 }} />
+          <EditOutlined
+            onClick={() => handleEdit(record)}
+            style={{ marginRight: 8 }}
+          />
           <DeleteOutlined onClick={() => handleDelete(record._id)} />
         </>
       ),
@@ -86,9 +95,19 @@ const BudgetPlanner: React.FC = () => {
     const updatedEntry = { ...entry, date: formattedDate };
 
     if (entry._id) {
-      dispatch(updateEntry({ entry: updatedEntry, type: isIncome ? "income" : "expense" }));
+      dispatch(
+        updateEntry({
+          entry: updatedEntry,
+          type: isIncome ? "income" : "expense",
+        })
+      );
     } else {
-      dispatch(createEntry({ entry: updatedEntry, type: isIncome ? "income" : "expense" }));
+      dispatch(
+        createEntry({
+          entry: updatedEntry,
+          type: isIncome ? "income" : "expense",
+        })
+      );
     }
     resetForm();
   };
@@ -128,13 +147,16 @@ const BudgetPlanner: React.FC = () => {
       {!isIncome && (
         <div style={{ marginBottom: 16 }}>
           <Select
-            placeholder={<span style={{ color: '#001529' }}>Select Month</span>}
+            placeholder={<span style={{ color: "#001529" }}>Select Month</span>}
             style={{ width: 120, marginRight: 8 }}
             onChange={(month) => setMonthFilter(month)}
           >
             {Array.from({ length: 12 }, (_, index) => (
-              <Option key={index} value={moment().subtract(index, 'months').format('YYYY-MM')}>
-                {moment().subtract(index, 'months').format('MMMM YYYY')}
+              <Option
+                key={index}
+                value={moment().subtract(index, "months").format("YYYY-MM")}
+              >
+                {moment().subtract(index, "months").format("MMMM YYYY")}
               </Option>
             ))}
           </Select>
@@ -142,8 +164,10 @@ const BudgetPlanner: React.FC = () => {
           <Select
             style={{ width: 120 }}
             onChange={(category) => setCategoryFilter(category)}
-            dropdownStyle={{ color: 'gray' }}
-            placeholder={<span style={{ color: '#001529' }}>Select Category</span>}
+            dropdownStyle={{ color: "gray" }}
+            placeholder={
+              <span style={{ color: "#001529" }}>Select Category</span>
+            }
           >
             {categories.map((category: string) => (
               <Option key={category} value={category}>
@@ -159,7 +183,10 @@ const BudgetPlanner: React.FC = () => {
       )}
 
       {loading ? (
-        <Spin />
+        <div className="text-center mt-20">
+          <Spin />
+        </div>
+        
       ) : error ? (
         <Alert message="Error" description={error} type="error" />
       ) : (

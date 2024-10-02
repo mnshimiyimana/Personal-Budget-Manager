@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Bar } from 'react-chartjs-2';
-import axios from 'axios'; 
-import { Chart, registerables } from 'chart.js';
+import React, { useEffect, useState, useRef } from "react";
+import { Bar } from "react-chartjs-2";
+import axios from "axios";
+import { Chart, registerables } from "chart.js";
+import { Skeleton } from "antd";
 Chart.register(...registerables);
 
 const MonthlyVariationChart = () => {
@@ -10,10 +11,12 @@ const MonthlyVariationChart = () => {
 
   const fetchMonthlySummary = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/finance/monthly-summary');
+      const response = await axios.get(
+        "http://localhost:5000/api/finance/monthly-summary"
+      );
       const monthlyData = response.data;
 
-      const incomeData = Array(12).fill(0); 
+      const incomeData = Array(12).fill(0);
       const expenseData = Array(12).fill(0);
 
       monthlyData.income.forEach((item: any) => {
@@ -26,22 +29,32 @@ const MonthlyVariationChart = () => {
 
       setChartData({
         labels: [
-          'January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December'
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
         ],
         datasets: [
           {
-            label: 'Total Income',
+            label: "Total Income",
             data: incomeData,
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: "rgba(75, 192, 192, 0.6)",
+            borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 1,
           },
           {
-            label: 'Total Expenses',
+            label: "Total Expenses",
             data: expenseData,
-            backgroundColor: 'rgba(255, 99, 132, 0.6)',
-            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: "rgba(255, 99, 132, 0.6)",
+            borderColor: "rgba(255, 99, 132, 1)",
             borderWidth: 1,
           },
         ],
@@ -53,8 +66,6 @@ const MonthlyVariationChart = () => {
 
   useEffect(() => {
     fetchMonthlySummary();
-
-    // Copy the chartRef.current to a variable before cleanup
     const currentChartRef = chartRef.current;
 
     return () => {
@@ -66,23 +77,25 @@ const MonthlyVariationChart = () => {
 
   return (
     <div>
-      <h2 className="text-center text-xl font-bold mb-4">Monthly Income and Expense Summary</h2>
+      <h2 className="text-center text-xl font-bold mb-6">
+        Monthly Income and Expense Summary
+      </h2>
       {chartData ? (
         <Bar
-          className='mx-20'
+          className="mx-20"
           ref={chartRef}
           data={chartData}
           options={{
             responsive: true,
             scales: {
               x: {
-                type: 'category',
+                type: "category",
               },
               y: {
                 beginAtZero: true,
                 ticks: {
                   callback: function (value) {
-                    return '$' + value;
+                    return "$" + value;
                   },
                 },
               },
@@ -90,7 +103,7 @@ const MonthlyVariationChart = () => {
           }}
         />
       ) : (
-        <p>Loading...</p>
+        <Skeleton active paragraph={{ rows: 10 }} />
       )}
     </div>
   );

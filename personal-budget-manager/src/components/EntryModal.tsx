@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Input } from 'antd';
 
 interface Entry {
-  key?: number;
+  _id?: string;
   category: string;
   date: string;
   description: string;
@@ -18,20 +18,43 @@ interface EntryModalProps {
 }
 
 const EntryModal: React.FC<EntryModalProps> = ({ visible, entry, onSave, onCancel }) => {
-  const [formData, setFormData] = React.useState<Entry>({
-    category: entry?.category || '',
-    date: entry?.date || '',
-    description: entry?.description || '',
-    amount: entry?.amount || 0,
-    currency: entry?.currency || 'USD',
+  const [formData, setFormData] = useState<Entry>({
+    category: '',
+    date: '',
+    description: '',
+    amount: 0,
+    currency: 'USD',
   });
+
+  useEffect(() => {
+    if (entry) {
+      setFormData({
+        _id: entry._id,
+        category: entry.category,
+        date: entry.date,
+        description: entry.description,
+        amount: entry.amount,
+        currency: entry.currency,
+      });
+    } else {
+      
+      setFormData({
+        category: '',
+        date: '',
+        description: '',
+        amount: 0,
+        currency: 'USD',
+      });
+    }
+  }, [entry]);
 
   const handleChange = (key: keyof Entry) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [key]: e.target.value });
   };
 
   const handleSave = () => {
-    onSave({ ...formData, key: entry ? entry.key : undefined });
+    const updatedEntry = { ...formData, _id: entry ? entry._id : undefined }; 
+    onSave(updatedEntry);
   };
 
   return (
