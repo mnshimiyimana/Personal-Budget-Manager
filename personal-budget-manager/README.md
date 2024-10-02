@@ -26,7 +26,7 @@ The Personal Budget Manager is a web-based application for tracking expenses, ma
 **Install dependencies:**
 `npm install`
 
-### Running the Application
+## Running the Application
 **Start the frontend application:**
 npm start
 Access the app: http://localhost:3000
