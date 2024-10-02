@@ -5,7 +5,6 @@ import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 const MonthlyVariationChart = () => {
- 
   const [chartData, setChartData] = useState<any>(null);
   const chartRef = useRef<any>(null);
 
@@ -55,9 +54,12 @@ const MonthlyVariationChart = () => {
   useEffect(() => {
     fetchMonthlySummary();
 
+    // Copy the chartRef.current to a variable before cleanup
+    const currentChartRef = chartRef.current;
+
     return () => {
-      if (chartRef.current) {
-        chartRef.current.destroy();
+      if (currentChartRef) {
+        currentChartRef.destroy();
       }
     };
   }, []);
@@ -67,7 +69,7 @@ const MonthlyVariationChart = () => {
       <h2 className="text-center text-xl font-bold mb-4">Monthly Income and Expense Summary</h2>
       {chartData ? (
         <Bar
-        className='mx-20'
+          className='mx-20'
           ref={chartRef}
           data={chartData}
           options={{
